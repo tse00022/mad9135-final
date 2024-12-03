@@ -11,10 +11,22 @@ class ShareCodeScreen extends StatefulWidget {
 
 class _ShareCodeScreenState extends State<ShareCodeScreen> {
   @override
+  void initState() {
+    super.initState();
+    _startSession();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-      title: Text(Provider.of<AppState>(context).deviceId ?? "No Device ID"),
+      title: Text('Share Code'),
     ));
+  }
+
+  void _startSession() {
+    print("checkpoint 1 ");
+    String? deviceId = Provider.of<AppState>(context, listen: false).deviceId;
+    print("deviceId from share screen $deviceId");
   }
 }

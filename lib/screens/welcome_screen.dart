@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'package:android_id/android_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:final_project/screens/share_code_screen.dart';
 import 'package:flutter/widgets.dart';
@@ -46,8 +50,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  void _initializeDeviceId() {
-    String deviceId = "123456";
+  void _initializeDeviceId() async {
+    String deviceId = await _fetchDeviceId();
     Provider.of<AppState>(context, listen: false).setDeviceId(deviceId);
+  }
+
+  Future<String> _fetchDeviceId() async {
+    String deviceId;
+
+    try {
+      if (Platform.isAndroid) {
+        const androidIdPlugin = AndroidId();
+        deviceId = await androidIdPlugin.getId() ?? "Unknown Android ID";
+      } else if (Platform.isIOS) {
+        final deviceInfoPlugin = DeviceInfoPlugin();
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        deviceId = iosInfo.identifierForVendor ?? "Unknown iOS UUID";
+      } else {
+        deviceId = 'Unsupported platform';
+      }
+    } catch (e) {
+      deviceId = "Error: $e";
+    }
+    print('Device ID: $deviceId');
+    return deviceId;
   }
 }

@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   provider:
+  android_id:
+  device_info_plus:
 
 dev_dependencies:
   flutter_test:
