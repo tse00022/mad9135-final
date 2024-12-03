@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:final_project/utils/app_state.dart';
 
 class ShareCodeScreen extends StatefulWidget {
   const ShareCodeScreen({super.key});
@@ -10,6 +12,9 @@ class ShareCodeScreen extends StatefulWidget {
 class _ShareCodeScreenState extends State<ShareCodeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+        appBar: AppBar(
+      title: Text(Provider.of<AppState>(context).deviceId ?? "No Device ID"),
+    ));
   }
 }
