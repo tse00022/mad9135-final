@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/screens/share_code_screen.dart';
+import 'package:flutter/widgets.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({
@@ -16,7 +17,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Movie Night'),
+        title: const Text('Movie Night',
+            style: TextStyle(color: Colors.white, fontSize: 24)),
         backgroundColor: Colors.blue,
       ),
       body: Center(
