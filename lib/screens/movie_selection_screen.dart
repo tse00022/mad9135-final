@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:final_project/screens/welcome_screen.dart';
 import 'package:final_project/utils/http_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -80,47 +83,124 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
   }
 
   void handleDismiss(DismissDirection direction, BuildContext context) async {
-    // Handle like/dislike logic here
+    // guard context the use with a 'mounted'
+    if (!context.mounted) return;
+
     String action =
         direction == DismissDirection.endToStart ? "dislike" : "like";
-
     try {
-      await HttpHelper.voteMovie(
+      final response = await HttpHelper.voteMovie(
         Provider.of<AppState>(context, listen: false).sessionId,
         movies[currentIndex]['id'].toString(),
         action == "like",
       );
 
-      // Move to next movie
+      //{data: {message: thanks for voting., movie_id: 912649, match: true, num_devices: 1, submitted_movie: 1182387}}
+
+      bool match = response['data']['match'];
+      if (match) {
+        String movieId = response['data']['movie_id'].toString();
+        // Find the index of the movie that matches the movieId
+        int matchIndex = movies.indexWhere(
+          (movie) => movie['id'].toString() == movieId,
+        );
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.lightBlue[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.movie,
+                      size: 40,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "${movies[matchIndex]['title']} Winner!",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        'https://image.tmdb.org/t/p/w500${movies[matchIndex]['poster_path']}',
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "${movies[matchIndex]['title']} is the matching movie!",
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const WelcomeScreen()),
+                          (Route<dynamic> route) =>
+                              false, // This removes all previous routes
+                        )
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(100, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }
+
       setState(() {
         currentIndex++;
       });
 
-      // Check if we need to load more movies
       if (currentIndex >= movies.length - 3) {
-        // Start loading when near the end
         page++;
         await getMovies(context);
       }
     } catch (e) {
-      // Show alert dialog with error message
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Cannot vote movie'),
-            content: Text('$e'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Cannot vote movie'),
+              content: Text('$e'),
+              actions: [
+                TextButton(
+                  onPressed: () => {Navigator.pop(context)},
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
