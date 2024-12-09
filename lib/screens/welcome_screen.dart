@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-
 import 'package:flutter/material.dart';
 import 'package:final_project/screens/share_code_screen.dart';
 import 'package:flutter/widgets.dart';
@@ -26,27 +25,60 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Movie Night',
-            style: TextStyle(color: Colors.white, fontSize: 24)),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Movie Night',
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: colorScheme.primary,
       ),
+      backgroundColor: colorScheme.surface,
       body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ShareCodeScreen(),
-                    ));
-              },
-              child: Text("Start Session")),
-        ],
-      )),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 3,
+                ),
+                child: Text(
+                  "Start Session",
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -57,7 +89,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<String> _fetchDeviceId() async {
     String deviceId;
-
     try {
       if (Platform.isAndroid) {
         const androidIdPlugin = AndroidId();
