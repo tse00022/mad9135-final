@@ -88,7 +88,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
               ElevatedButton(
-                onPressed: context.watch<AppState>().sessionId!.isEmpty
+                onPressed: context.watch<AppState>().sessionId.isEmpty
                     ? null
                     : () {
                         Navigator.push(

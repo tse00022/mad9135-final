@@ -1,3 +1,4 @@
+import 'package:final_project/utils/http_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/utils/app_state.dart';
@@ -10,6 +11,17 @@ class MovieSelectionScreen extends StatefulWidget {
 }
 
 class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
+  List<Map<String, dynamic>> movies = [];
+  int currentIndex = 0;
+  int page = 1;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getMovies(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,42 +41,129 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(context.watch<AppState>().sessionId),
-          MovieCard(
-            title: 'Trolls Band Together',
-            imageUrl:
-                'https://picsum.photos/250?image=9', // Add your image path
-            rating: 7.2,
-            releaseDate: '2023-10-12',
-            onTap: () {
-              // Handle movie selection
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Usage'),
-                    content: const Text('Swipe left to dislike, right to like'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Understood'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            onDismissed: (direction) {
-              String swipeDirection = direction == DismissDirection.endToStart
-                  ? "right to left"
-                  : "left to right";
-            },
-          ),
-          // Add more MovieCard widgets as needed
+          if (isLoading)
+            const Center(child: CircularProgressIndicator())
+          else if (movies.isEmpty)
+            const Center(child: Text('No movies available'))
+          else
+            MovieCard(
+              title: movies[currentIndex]['title'] ?? '',
+              imageUrl:
+                  'https://image.tmdb.org/t/p/w500${movies[currentIndex]['poster_path']}',
+              rating: (movies[currentIndex]['vote_average'] ?? 0).toDouble(),
+              releaseDate: movies[currentIndex]['release_date'] ?? '',
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Usage'),
+                      content:
+                          const Text('Swipe left to dislike, right to like'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Understood'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              onDismissed: (direction) {
+                handleDismiss(direction, context);
+              },
+            ),
         ],
       ),
     );
+  }
+
+  void handleDismiss(DismissDirection direction, BuildContext context) async {
+    // Handle like/dislike logic here
+    String action =
+        direction == DismissDirection.endToStart ? "dislike" : "like";
+
+    try {
+      await HttpHelper.voteMovie(
+        Provider.of<AppState>(context, listen: false).sessionId,
+        movies[currentIndex]['id'].toString(),
+        action == "like",
+      );
+
+      // Move to next movie
+      setState(() {
+        currentIndex++;
+      });
+
+      // Check if we need to load more movies
+      if (currentIndex >= movies.length - 3) {
+        // Start loading when near the end
+        page++;
+        await getMovies(context);
+      }
+    } catch (e) {
+      // Show alert dialog with error message
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Cannot vote movie'),
+            content: Text('$e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> getMovies(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await HttpHelper.getPopularMovies(page);
+      setState(() {
+        // If it's the first page, replace the list
+        // If it's not the first page, append to the existing list
+        if (page == 1) {
+          movies = List<Map<String, dynamic>>.from(response['results']);
+        } else {
+          movies.addAll(List<Map<String, dynamic>>.from(response['results']));
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Cannot get movies'),
+              content: Text('$e'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 }
 
