@@ -1,7 +1,6 @@
 import 'package:final_project/screens/movie_selection_screen.dart';
 import 'package:final_project/utils/http_helper.dart';
 import 'package:final_project/utils/json_file_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/utils/app_state.dart';
@@ -17,7 +16,6 @@ class ShareCodeScreen extends StatefulWidget {
 
 class _ShareCodeScreenState extends State<ShareCodeScreen> {
   String code = 'Unset';
-  String sessionId = '';
 
   @override
   void initState() {
@@ -52,14 +50,6 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Your Session id: $sessionId',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
                 Text(
                   'Your Session Code',
                   style: TextStyle(
@@ -137,10 +127,10 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
     final response = await HttpHelper.startSession(deviceId);
     setState(() {
       code = response['data']['code'];
-      sessionId = response['data']['session_id'];
     });
 
-    Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
-    await JsonFileHelper.setSessionId(sessionId);
+    Provider.of<AppState>(context, listen: false)
+        .setSessionId(response['data']['session_id']);
+    await JsonFileHelper.setSessionId(response['data']['session_id']);
   }
 }

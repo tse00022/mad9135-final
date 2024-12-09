@@ -43,7 +43,6 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(context.watch<AppState>().sessionId),
           if (isLoading)
             const Center(child: CircularProgressIndicator())
           else if (movies.isEmpty)

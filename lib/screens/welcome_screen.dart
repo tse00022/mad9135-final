@@ -48,107 +48,106 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Your device Id: ${context.watch<AppState>().deviceId}',
-                style: (Theme.of(context).textTheme.titleLarge ??
-                        const TextStyle())
-                    .copyWith(
-                  color: colorScheme.onSurface,
-                ),
-              ),
-              ElevatedButton(
-                //Button for starting a new session
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ShareCodeScreen(),
+              SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    //Button for starting a new session
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShareCodeScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 3,
-                ),
-                child: Text(
-                  "Start Session",
-                  style: (Theme.of(context).textTheme.titleLarge ??
-                          const TextStyle())
-                      .copyWith(
-                    color: colorScheme.onPrimary,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: context.watch<AppState>().sessionId.isEmpty
-                    ? null
-                    : () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MovieSelectionScreen(),
-                          ),
-                        );
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 3,
-                ),
-                child: Text(
-                  "Resume Session", // Also fixed the button text
-                  style: (Theme.of(context).textTheme.titleLarge ??
-                          const TextStyle())
-                      .copyWith(
-                    color: colorScheme.onPrimary,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EnterCodeScreen(),
+                    child: Text(
+                      "Start Session",
+                      style: (Theme.of(context).textTheme.titleLarge ??
+                              const TextStyle())
+                          .copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 3,
-                ),
-                child: Text(
-                  "Enter Code", // Also fixed the button text
-                  style: (Theme.of(context).textTheme.titleLarge ??
-                          const TextStyle())
-                      .copyWith(
-                    color: colorScheme.onPrimary,
-                  ),
-                ),
-              ),
+                  )),
+              SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    onPressed: context.watch<AppState>().sessionId.isEmpty
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const MovieSelectionScreen(),
+                              ),
+                            );
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
+                    ),
+                    child: Text(
+                      "Resume Session", // Also fixed the button text
+                      style: (Theme.of(context).textTheme.titleLarge ??
+                              const TextStyle())
+                          .copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
+                    ),
+                  )),
+              SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EnterCodeScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
+                    ),
+                    child: Text(
+                      "Enter Code", // Also fixed the button text
+                      style: (Theme.of(context).textTheme.titleLarge ??
+                              const TextStyle())
+                          .copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
+                    ),
+                  ))
             ],
           ),
         ),

@@ -5,7 +5,6 @@ import 'package:final_project/utils/app_state.dart';
 import 'package:final_project/utils/http_helper.dart';
 import 'package:final_project/utils/json_file_helper.dart';
 import 'package:final_project/screens/movie_selection_screen.dart';
-import 'package:flutter/foundation.dart';
 
 class EnterCodeScreen extends StatefulWidget {
   const EnterCodeScreen({super.key});
