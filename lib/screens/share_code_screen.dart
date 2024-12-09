@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/utils/app_state.dart';
-import 'package:http/http.dart' as http;
 
 class ShareCodeScreen extends StatefulWidget {
   const ShareCodeScreen({super.key});

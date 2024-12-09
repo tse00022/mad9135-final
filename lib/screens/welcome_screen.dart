@@ -17,6 +17,8 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  String deviceId = '';
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +49,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                'Your device Id: $deviceId',
+                style: (Theme.of(context).textTheme.titleLarge ??
+                        const TextStyle())
+                    .copyWith(
+                  color: colorScheme.onSurface,
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -70,9 +80,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 child: Text(
                   "Start Session",
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: colorScheme.onPrimary,
-                      ),
+                  style: (Theme.of(context).textTheme.titleLarge ??
+                          const TextStyle())
+                      .copyWith(
+                    color: colorScheme.onPrimary,
+                  ),
                 ),
               ),
             ],
@@ -85,6 +97,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void _initializeDeviceId() async {
     String deviceId = await _fetchDeviceId();
     Provider.of<AppState>(context, listen: false).setDeviceId(deviceId);
+    setState(() {
+      this.deviceId = deviceId;
+    });
   }
 
   Future<String> _fetchDeviceId() async {
@@ -103,7 +118,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     } catch (e) {
       deviceId = "Error: $e";
     }
-    print('Device ID: $deviceId');
     return deviceId;
   }
 }

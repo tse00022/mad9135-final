@@ -129,7 +129,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
