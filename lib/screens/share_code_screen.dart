@@ -1,3 +1,4 @@
+import 'package:final_project/screens/movie_selection_screen.dart';
 import 'package:final_project/utils/http_helper.dart';
 import 'package:final_project/utils/json_file_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +32,7 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Movie Night',
+          'Enter the code',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -92,6 +93,37 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
                     color: colorScheme.onSurface,
                   ),
                 ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MovieSelectionScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                  ),
+                  child: Text(
+                    "Begin", // Also fixed the button text
+                    style: (Theme.of(context).textTheme.titleLarge ??
+                            const TextStyle())
+                        .copyWith(
+                      color: colorScheme.onPrimary,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -114,8 +146,8 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
     });
 
     Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
-
     await JsonFileHelper.setSessionId(sessionId);
+
     if (kDebugMode) {
       print('Session ID: $sessionId');
       print('Session id from disk ${await JsonFileHelper.getSessionId()}');
