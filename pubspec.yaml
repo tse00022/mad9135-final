@@ -13,6 +13,9 @@ dependencies:
   provider:
   android_id:
   device_info_plus:
+  flutter_launcher_icons: 
+  flutter_native_splash: 
+
 
 dev_dependencies:
   flutter_test:
@@ -21,3 +24,18 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_icon.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/app_icon.png"
+
+flutter_native_splash:
+    color: "#ffffff" # Background color for the splash screen
+    image: "assets/images/splash_logo.png" # Path to your splash screen logo
+    android: true
+    ios: true 
