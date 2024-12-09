@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:final_project/screens/enter_code_screen.dart';
 import 'package:final_project/screens/movie_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/screens/share_code_screen.dart';
@@ -111,6 +112,36 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 child: Text(
                   "Resume Session", // Also fixed the button text
+                  style: (Theme.of(context).textTheme.titleLarge ??
+                          const TextStyle())
+                      .copyWith(
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EnterCodeScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 3,
+                ),
+                child: Text(
+                  "Enter Code", // Also fixed the button text
                   style: (Theme.of(context).textTheme.titleLarge ??
                           const TextStyle())
                       .copyWith(

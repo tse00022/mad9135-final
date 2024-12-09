@@ -13,7 +13,33 @@ class HttpHelper {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to start session');
+      throw Exception(response.body);
+    }
+  }
+
+  static joinSession(String code, String? deviceId) async {
+    final response = await http.get(
+      Uri.parse(
+          "$movieNightApiUrl/join-session?code=$code&device_id=$deviceId"),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  static voteMovie(String sessionId, String movieId, bool vote) async {
+    final response = await http.get(
+      Uri.parse(
+          "$movieNightApiUrl/vote-movie?session_id=$sessionId&movie_id=$movieId&vote=$vote"),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(response.body);
     }
   }
 }
