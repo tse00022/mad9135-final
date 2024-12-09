@@ -138,12 +138,6 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
       Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
       await JsonFileHelper.setSessionId(sessionId);
 
-      if (kDebugMode) {
-        print('Session ID: $sessionId');
-        print('Session id from disk ${await JsonFileHelper.getSessionId()}');
-        print('sessionId from response: $sessionId');
-      }
-
       //navigate to movie selection screen
       Navigator.push(
         context,

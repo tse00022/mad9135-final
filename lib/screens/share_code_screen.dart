@@ -134,11 +134,6 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
 
   void _startSession(context) async {
     String? deviceId = Provider.of<AppState>(context, listen: false).deviceId;
-
-    if (kDebugMode) {
-      print('Device ID: $deviceId');
-    }
-
     final response = await HttpHelper.startSession(deviceId);
     setState(() {
       code = response['data']['code'];
@@ -147,10 +142,5 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
 
     Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
     await JsonFileHelper.setSessionId(sessionId);
-
-    if (kDebugMode) {
-      print('Session ID: $sessionId');
-      print('Session id from disk ${await JsonFileHelper.getSessionId()}');
-    }
   }
 }
