@@ -44,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       builder: (context) => ShareCodeScreen(),
                     ));
               },
-              child: Text("Start Session"))
+              child: Text("Start Session")),
         ],
       )),
     );
