@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:final_project/screens/movie_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/screens/share_code_screen.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/utils/app_state.dart';
 
@@ -17,12 +17,10 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  String deviceId = '';
-
   @override
   void initState() {
     super.initState();
-    _initializeDeviceId();
+    _initializeDeviceId(context);
   }
 
   @override
@@ -50,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Your device Id: $deviceId',
+                'Your device Id: ${context.watch<AppState>().deviceId}',
                 style: (Theme.of(context).textTheme.titleLarge ??
                         const TextStyle())
                     .copyWith(
@@ -58,11 +56,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
               ElevatedButton(
+                //Button for starting a new session
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ShareCodeScreen(),
+                      builder: (context) => const ShareCodeScreen(),
                     ),
                   );
                 },
@@ -87,6 +86,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
               ),
+              ElevatedButton(
+                onPressed: context.watch<AppState>().sessionId!.isEmpty
+                    ? null
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MovieSelectionScreen(),
+                          ),
+                        );
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 3,
+                ),
+                child: Text(
+                  "Resume Session", // Also fixed the button text
+                  style: (Theme.of(context).textTheme.titleLarge ??
+                          const TextStyle())
+                      .copyWith(
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -94,12 +125,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  void _initializeDeviceId() async {
+  void _initializeDeviceId(context) async {
     String deviceId = await _fetchDeviceId();
     Provider.of<AppState>(context, listen: false).setDeviceId(deviceId);
-    setState(() {
-      this.deviceId = deviceId;
-    });
   }
 
   Future<String> _fetchDeviceId() async {

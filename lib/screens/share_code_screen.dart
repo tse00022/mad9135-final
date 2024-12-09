@@ -1,11 +1,14 @@
 import 'package:final_project/utils/http_helper.dart';
+import 'package:final_project/utils/json_file_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/utils/app_state.dart';
 
 class ShareCodeScreen extends StatefulWidget {
-  const ShareCodeScreen({super.key});
+  const ShareCodeScreen({
+    super.key,
+  });
 
   @override
   State<ShareCodeScreen> createState() => _ShareCodeScreenState();
@@ -13,11 +16,12 @@ class ShareCodeScreen extends StatefulWidget {
 
 class _ShareCodeScreenState extends State<ShareCodeScreen> {
   String code = 'Unset';
+  String sessionId = '';
 
   @override
   void initState() {
     super.initState();
-    _startSession();
+    _startSession(context);
   }
 
   @override
@@ -47,6 +51,14 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Text(
+                  'Your Session id: $sessionId',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
                 Text(
                   'Your Session Code',
                   style: TextStyle(
@@ -88,7 +100,7 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
     );
   }
 
-  void _startSession() async {
+  void _startSession(context) async {
     String? deviceId = Provider.of<AppState>(context, listen: false).deviceId;
 
     if (kDebugMode) {
@@ -98,6 +110,15 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
     final response = await HttpHelper.startSession(deviceId);
     setState(() {
       code = response['data']['code'];
+      sessionId = response['data']['session_id'];
     });
+
+    Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
+
+    await JsonFileHelper.setSessionId(sessionId);
+    if (kDebugMode) {
+      print('Session ID: $sessionId');
+      print('Session id from disk ${await JsonFileHelper.getSessionId()}');
+    }
   }
 }
